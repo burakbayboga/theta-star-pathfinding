@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class MapFiller : MonoBehaviour
 {
-	public GameObject walkableTest;
-	public GameObject nonWalkableTest;
+	public bool testNodeWalkableStates = false;
 
 	private int mapSizeX;
 	private int mapSizeY;
@@ -14,6 +13,9 @@ public class MapFiller : MonoBehaviour
 	private Vector3 groundPos;
 	private int halfMapSizeX;
 	private int halfMapSizeY;
+
+	private GameObject walkableNodeTestPrefab;
+	private GameObject nonWalkableNodeTestPrefab;
 
 
 	void Start()
@@ -25,7 +27,10 @@ public class MapFiller : MonoBehaviour
 	{
 		InitMap();
 		FillMap();
-		//FillTest();
+		if (testNodeWalkableStates)
+		{
+			FillTest();
+		}
 
 		_mapSizeX = mapSizeX;
 		_mapSizeY = mapSizeY;
@@ -56,6 +61,8 @@ public class MapFiller : MonoBehaviour
 
 	private void FillTest()
 	{
+		walkableNodeTestPrefab = Resources.Load("walkable test") as GameObject;
+		nonWalkableNodeTestPrefab = Resources.Load("non walkable test") as GameObject;
 		for (int i = 0; i < mapSizeX; i++)
 		{
 			for (int j = 0; j < mapSizeY; j++)
@@ -64,11 +71,11 @@ public class MapFiller : MonoBehaviour
 				Vector3 pos = MapToWorld(node.mapPos);
 				if (!map[i, j].isWalkable)
 				{
-					Instantiate(nonWalkableTest, pos, Quaternion.identity);
+					Instantiate(nonWalkableNodeTestPrefab, pos, Quaternion.identity);
 				}
 				else
 				{
-					Instantiate(walkableTest, pos, Quaternion.identity);
+					Instantiate(walkableNodeTestPrefab, pos, Quaternion.identity);
 				}
 			}
 		}

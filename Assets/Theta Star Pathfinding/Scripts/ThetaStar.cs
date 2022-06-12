@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MapFiller))]
 public class ThetaStar : MonoBehaviour
 {
 	public static ThetaStar instance;
 
 	public GameObject processedNodeObject;
-	public bool smoothPath;
+	public bool smoothPath = true;
 	
 	private MapFiller mapFiller;
 	private ThetaStarNode[,] map;

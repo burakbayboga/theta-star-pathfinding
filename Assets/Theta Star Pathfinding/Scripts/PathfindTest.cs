@@ -7,13 +7,16 @@ public class PathfindTest : MonoBehaviour
     public Transform startPoint;
 	public Transform endPoint;
 
-	public GameObject pathPointPrefab;
-	public GameObject pathLinePrefab;
+	private GameObject pathPointPrefab;
+	private GameObject pathLinePrefab;
 
 	private List<GameObject> pathObjects = new List<GameObject>();
 
 	void Start()
 	{
+		pathPointPrefab = Resources.Load("Path Point") as GameObject;
+		pathLinePrefab = Resources.Load("Path Line") as GameObject;
+
 		GetPath();
 	}
 

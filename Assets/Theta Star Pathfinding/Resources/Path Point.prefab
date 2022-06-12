@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8493688942124138338}
   - component: {fileID: 4180832766253366444}
   m_Layer: 0
-  m_Name: processed node
+  m_Name: Path Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
