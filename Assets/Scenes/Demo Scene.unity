@@ -415,6 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   processedNodeObject: {fileID: 6703432410762668372, guid: 515e941d0c6528945870faeee5cb7be8, type: 3}
+  smoothPath: 0
 --- !u!1001 &462496418
 PrefabInstance:
   m_ObjectHideFlags: 0

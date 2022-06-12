@@ -61,7 +61,7 @@ public class MapFiller : MonoBehaviour
 			for (int j = 0; j < mapSizeY; j++)
 			{
 				ThetaStarNode node = map[i, j];
-				Vector3 pos = new Vector3(node.mapPos.x - halfMapSizeX, 0f, node.mapPos.y - halfMapSizeY);
+				Vector3 pos = MapToWorld(node.mapPos);
 				if (!map[i, j].isWalkable)
 				{
 					Instantiate(nonWalkableTest, pos, Quaternion.identity);
@@ -122,11 +122,5 @@ public class MapFiller : MonoBehaviour
 	{
 		return xCoord >= 0 && xCoord < mapSizeX
 				&& yCoord >= 0 && yCoord < mapSizeY;
-	}
-
-	private bool IsCoordValid(int xCoord, int yCoord)
-	{
-		return IsCoordWithinBounds(xCoord, yCoord)
-				&& map[xCoord, yCoord].isWalkable;
 	}
 }
