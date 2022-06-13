@@ -34,6 +34,11 @@ public class ThetaStar : MonoBehaviour
 	private ThetaStarNode endNode;
 	private ThetaStarNode startNode;
 
+	private float sqrtTwo = Mathf.Sqrt(2f);
+
+	// Used by line of sight checks to avoid allocation
+	private RaycastHit[] raycastHitBuffer = new RaycastHit[1];
+
 	private void Awake()
 	{
 		// Make singleton to make access easier and remove the need for scene references.
@@ -135,7 +140,9 @@ public class ThetaStar : MonoBehaviour
 		// 2 nodes being in opposite directions.
 		if (path.Count > 1)
 		{
-			if (!Physics.Linecast(startPoint, path[1], wallLayermask))
+			Vector3 lineOfSight = startPoint - path[1];
+			float lineOfSightLength = lineOfSight.magnitude;
+			if (Physics.RaycastNonAlloc(path[1], lineOfSight, raycastHitBuffer, lineOfSightLength, wallLayermask) == 0)
 			{
 				path.RemoveAt(0);
 			}
@@ -145,7 +152,9 @@ public class ThetaStar : MonoBehaviour
 		// the original target position.
 		if (path.Count > 1)
 		{
-			if (!Physics.Linecast(endPoint, path[path.Count - 2], wallLayermask))
+			Vector3 lineOfSight = endPoint - path[path.Count - 2];
+			float lineOfSightLength = lineOfSight.magnitude;
+			if (Physics.RaycastNonAlloc(path[path.Count - 2], lineOfSight, raycastHitBuffer, lineOfSightLength, wallLayermask) == 0)
 			{
 				path.RemoveAt(path.Count - 2);
 			}
@@ -179,9 +188,11 @@ public class ThetaStar : MonoBehaviour
 		Vector3 neighborNodePos = mapFiller.MapToWorld(neighborNode.mapPos);
 
 		// check if there is line of sight between nodes
-		if (smoothPath && !Physics.Linecast(currentParentPos, neighborNodePos, wallLayermask))
+		Vector3 lineOfSight = currentParentPos - neighborNodePos;
+		float lineOfSightLength = lineOfSight.magnitude;
+		if (smoothPath && Physics.RaycastNonAlloc(neighborNodePos, lineOfSight, raycastHitBuffer, lineOfSightLength, wallLayermask) == 0)
 		{
-			float localCost = (currentNode.parent.mapPos - neighborNode.mapPos).magnitude;
+			float localCost = lineOfSightLength;
 			// check if neighbor node cost should be updated
 			if (currentNode.parent.gCost + localCost < neighborNode.gCost)
 			{
@@ -192,7 +203,7 @@ public class ThetaStar : MonoBehaviour
 		}
 		else
 		{
-			float localCost = (currentNode.mapPos - neighborNode.mapPos).magnitude;
+			float localCost = GetDistanceToNeighbor(currentNode.mapPos, neighborNode.mapPos);
 			// check if neighbor node cost should be updated
 			if (currentNode.gCost + localCost < neighborNode.gCost)
 			{
@@ -200,6 +211,19 @@ public class ThetaStar : MonoBehaviour
 				neighborNode.parent = currentNode;
 				neighborNode.hCost = (neighborNode.mapPos - startNode.mapPos).magnitude;
 			}
+		}
+	}
+
+	// Get distance to neighbor with this method to lessen the amount of vector magnitude calculations
+	private float GetDistanceToNeighbor(Vector2Int centerCoords, Vector2Int neighborCoords)
+	{
+		if (centerCoords.x == neighborCoords.x || centerCoords.y == neighborCoords.y)
+		{
+			return 1f;
+		}
+		else
+		{
+			return sqrtTwo;
 		}
 	}
 

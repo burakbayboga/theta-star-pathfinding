@@ -6,9 +6,13 @@ public class PathfindTest : MonoBehaviour
 {
     public Transform startPoint;
 	public Transform endPoint;
+	public LayerMask groundLayermask;
 
 	private GameObject pathPointPrefab;
 	private GameObject pathLinePrefab;
+
+	// This is used for mobile testing to differentiate between setting start and end points with touch input
+	private bool settingStartPoint = true;
 
 	private List<GameObject> pathObjects = new List<GameObject>();
 
@@ -22,10 +26,44 @@ public class PathfindTest : MonoBehaviour
 
 	private void Update()
 	{
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+		CheckTouchInput();
+#else
+		CheckMouseInput();
+#endif
+	}
+
+	private void CheckTouchInput()
+	{
+		if (Input.touchCount > 0)
+		{
+			Touch touch = Input.GetTouch(0);
+			if (touch.phase == TouchPhase.Began)
+			{
+				RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenToWorldPoint(touch.position), Camera.main.transform.forward, 100f, groundLayermask);
+				if (hits.Length > 0)
+				{
+					if (settingStartPoint)
+					{
+						SetStartPoint(hits[0].point);
+					}
+					else
+					{
+						SetEndPoint(hits[0].point);
+					}
+					settingStartPoint = !settingStartPoint;
+					GetPath();
+				}
+			}
+		}
+	}
+
+	private void CheckMouseInput()
+	{
 		if (Input.GetMouseButtonDown(0))
 		{
 			// Get the position for the start point
-			RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Camera.main.transform.forward, 100f, 1 << 27);
+			RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Camera.main.transform.forward, 100f, groundLayermask);
 			if (hits.Length > 0)
 			{
 				SetStartPoint(hits[0].point);
@@ -35,7 +73,7 @@ public class PathfindTest : MonoBehaviour
 		else if (Input.GetMouseButtonDown(1))
 		{
 			// Get the position for the end point
-			RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Camera.main.transform.forward, 100f, 1 << 27);
+			RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Camera.main.transform.forward, 100f, groundLayermask);
 			if (hits.Length > 0)
 			{
 				SetEndPoint(hits[0].point);
