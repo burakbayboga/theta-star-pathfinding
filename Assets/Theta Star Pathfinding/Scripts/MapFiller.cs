@@ -3,6 +3,8 @@ using UnityEngine;
 public class MapFiller : MonoBehaviour
 {
 	public bool testNodeWalkableStates = false;
+	public string obstacleTag;
+	public string groundTag;
 
 	private int mapSizeX;
 	private int mapSizeY;
@@ -31,7 +33,7 @@ public class MapFiller : MonoBehaviour
 	// Initialize the map grid
 	private void InitMap()
 	{
-		Transform groundTransform = GameObject.FindGameObjectWithTag("Theta Star Ground").GetComponent<Transform>();
+		Transform groundTransform = GameObject.FindGameObjectWithTag(groundTag).GetComponent<Transform>();
 		groundPos = groundTransform.position;
 		mapSizeX = (int)groundTransform.localScale.x + 1;
 		mapSizeY = (int)groundTransform.localScale.y + 1;
@@ -89,7 +91,7 @@ public class MapFiller : MonoBehaviour
 	// Fill unwalkable nodes on the grid map (walls, obstacles etc.)
 	private void FillMap()
 	{
-		GameObject[] walls = GameObject.FindGameObjectsWithTag("Theta Star Wall");
+		GameObject[] walls = GameObject.FindGameObjectsWithTag(obstacleTag);
 
 		for (int i = 0; i < walls.Length; i++)
 		{

@@ -1274,6 +1274,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPoint: {fileID: 8162057114764134193}
   endPoint: {fileID: 8911373502624245351}
+  groundLayermask:
+    serializedVersion: 2
+    m_Bits: 134217728
 --- !u!1 &1108422085
 GameObject:
   m_ObjectHideFlags: 0

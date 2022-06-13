@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testNodeWalkableStates: 0
+  obstacleTag: Theta Star Wall
+  groundTag: Theta Star Ground
 --- !u!114 &5357389759901342258
 MonoBehaviour:
   m_ObjectHideFlags: 0

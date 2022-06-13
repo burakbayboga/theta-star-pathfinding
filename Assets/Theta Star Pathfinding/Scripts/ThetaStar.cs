@@ -8,8 +8,6 @@ public class ThetaStar : MonoBehaviour
 {
 	public static ThetaStar instance;
 
-	public GameObject processedNodeObject;
-
 	// applies path smoothing when true (by removing unnecessary nodes)
 	public bool smoothPath = true;
 
@@ -90,7 +88,6 @@ public class ThetaStar : MonoBehaviour
 		{
 			ThetaStarNode currentNode = openList.Dequeue();
 			closedList.Add(currentNode);
-			//Instantiate(processedNodeObject, mapFiller.MapToWorld(currentNode.mapPos), Quaternion.identity);
 
 			if (currentNode == startNode)
 			{
@@ -166,7 +163,6 @@ public class ThetaStar : MonoBehaviour
 	// Calculate the cost of a given neighbor node and add it to the open list to check later
 	private void ProcessNode(ThetaStarNode currentNode, ThetaStarNode neighborNode)
 	{
-		//Instantiate(processedNodeObject, mapFiller.MapToWorld(neighborNode.mapPos), Quaternion.identity);
 		float oldCost = neighborNode.fCost;
 		CalculateCost(currentNode, neighborNode);
 		if (neighborNode.fCost < oldCost)

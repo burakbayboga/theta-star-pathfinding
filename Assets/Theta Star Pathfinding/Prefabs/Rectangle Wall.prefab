@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7890014459272849788}
   - component: {fileID: 6662603417206402863}
   m_Layer: 28
-  m_Name: Wall
+  m_Name: Rectangle Wall
   m_TagString: Theta Star Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
