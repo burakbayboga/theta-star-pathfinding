@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// This is the test class for the demo scene. It can be used to copy certain behaviors.
 public class PathfindTest : MonoBehaviour
 {
     public Transform startPoint;
@@ -24,6 +24,7 @@ public class PathfindTest : MonoBehaviour
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
+			// Get the position for the start point
 			RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Camera.main.transform.forward, 100f, 1 << 27);
 			if (hits.Length > 0)
 			{
@@ -33,6 +34,7 @@ public class PathfindTest : MonoBehaviour
 		}
 		else if (Input.GetMouseButtonDown(1))
 		{
+			// Get the position for the end point
 			RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Camera.main.transform.forward, 100f, 1 << 27);
 			if (hits.Length > 0)
 			{
@@ -40,12 +42,9 @@ public class PathfindTest : MonoBehaviour
 				GetPath();
 			}
 		}
-		else if (Input.GetKeyDown(KeyCode.Space))
-		{
-			//GetPath();
-		}
 	}
 
+	// Get a path and draw it on the scene using spheres and lines
 	private void GetPath()
 	{
 		List<Vector3> path = ThetaStar.instance.FindPath(startPoint.position, endPoint.position);

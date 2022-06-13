@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MapFiller : MonoBehaviour
@@ -17,13 +15,8 @@ public class MapFiller : MonoBehaviour
 	private GameObject walkableNodeTestPrefab;
 	private GameObject nonWalkableNodeTestPrefab;
 
-
-	void Start()
-	{
-		//GetMap(out int x, out int y);
-	}
-
-	public ThetaStarNode[,] GetMap(out int _mapSizeX, out int _mapSizeY)
+	// Generate the grid map and return it
+	public ThetaStarNode[,] GetMap()
 	{
 		InitMap();
 		FillMap();
@@ -32,11 +25,10 @@ public class MapFiller : MonoBehaviour
 			FillTest();
 		}
 
-		_mapSizeX = mapSizeX;
-		_mapSizeY = mapSizeY;
 		return map;
 	}
 
+	// Initialize the map grid
 	private void InitMap()
 	{
 		Transform groundTransform = GameObject.FindGameObjectWithTag("Theta Star Ground").GetComponent<Transform>();
@@ -59,6 +51,7 @@ public class MapFiller : MonoBehaviour
 		}
 	}
 
+	// Instantiate objects to see which grid nodes are walkable and which grid nodes are not
 	private void FillTest()
 	{
 		walkableNodeTestPrefab = Resources.Load("walkable test") as GameObject;
@@ -81,16 +74,19 @@ public class MapFiller : MonoBehaviour
 		}
 	}
 
+	// Convert a given grid map coordinate into a world space position
 	public Vector3 MapToWorld(Vector2Int mapCoords)
 	{
 		return new Vector3(mapCoords.x - halfMapSizeX, 0.5f, mapCoords.y - halfMapSizeY) + groundPos;
 	}
 
+	// Convert a given world space position into a grid map coordinate
 	public Vector2Int WorldToMap(Vector3 worldPos)
 	{
 		return new Vector2Int((int)Mathf.Round(worldPos.x - groundPos.x + halfMapSizeX), (int)Mathf.Round(worldPos.z - groundPos.z + halfMapSizeY));
 	}
 
+	// Fill unwalkable nodes on the grid map (walls, obstacles etc.)
 	private void FillMap()
 	{
 		GameObject[] walls = GameObject.FindGameObjectsWithTag("Theta Star Wall");
@@ -103,6 +99,7 @@ public class MapFiller : MonoBehaviour
 		}
 	}
 
+	// Place a given obstacle on the grid map
 	private void PlaceWallOnMap(Vector3 min, Vector3 max)
 	{
 		min.x = Mathf.Ceil(min.x);
@@ -125,9 +122,16 @@ public class MapFiller : MonoBehaviour
 		}
 	}
 	
+	// check if a given coordinate is within grid bounds
 	private bool IsCoordWithinBounds(int xCoord, int yCoord)
 	{
 		return xCoord >= 0 && xCoord < mapSizeX
 				&& yCoord >= 0 && yCoord < mapSizeY;
+	}
+
+	// check if a given coordinate is within grid bounds and walkable (not occupied by wall or obstacle)
+	public bool IsCoordValid(int xCoord, int yCoord)
+	{
+		return IsCoordWithinBounds(xCoord, yCoord) && map[xCoord, yCoord].isWalkable;
 	}
 }
