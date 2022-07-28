@@ -6,13 +6,15 @@ public class MapFiller : MonoBehaviour
 	public string obstacleTag;
 	public string groundTag;
 
+	public float nodeDistance;
+
 	private int mapSizeX;
 	private int mapSizeY;
 	private ThetaStarNode[,] map;
 
 	private Vector3 groundPos;
-	private int halfMapSizeX;
-	private int halfMapSizeY;
+	private float halfMapSizeX;
+	private float halfMapSizeY;
 
 	private GameObject walkableNodeTestPrefab;
 	private GameObject nonWalkableNodeTestPrefab;
@@ -35,10 +37,12 @@ public class MapFiller : MonoBehaviour
 	{
 		Transform groundTransform = GameObject.FindGameObjectWithTag(groundTag).GetComponent<Transform>();
 		groundPos = groundTransform.position;
-		mapSizeX = (int)groundTransform.localScale.x + 1;
-		mapSizeY = (int)groundTransform.localScale.y + 1;
-		halfMapSizeX = (mapSizeX - 1) / 2;
-		halfMapSizeY = (mapSizeY - 1) / 2;
+		mapSizeX = (int)(groundTransform.localScale.x / nodeDistance) + 1;
+		mapSizeY = (int)(groundTransform.localScale.y / nodeDistance) + 1;
+		//halfMapSizeX = (mapSizeX - 1f) / 2f;
+		//halfMapSizeY = (mapSizeY - 1f) / 2f;
+		halfMapSizeX = groundTransform.localScale.x / 2f;
+		halfMapSizeY = groundTransform.localScale.y / 2f;
 
 		map = new ThetaStarNode[mapSizeX, mapSizeY];
 
@@ -79,13 +83,13 @@ public class MapFiller : MonoBehaviour
 	// Convert a given grid map coordinate into a world space position
 	public Vector3 MapToWorld(Vector2Int mapCoords)
 	{
-		return new Vector3(mapCoords.x - halfMapSizeX, 0.5f, mapCoords.y - halfMapSizeY) + groundPos;
+		return new Vector3(mapCoords.x * nodeDistance - halfMapSizeX, 0.5f, mapCoords.y * nodeDistance - halfMapSizeY) + groundPos;
 	}
 
 	// Convert a given world space position into a grid map coordinate
 	public Vector2Int WorldToMap(Vector3 worldPos)
 	{
-		return new Vector2Int((int)Mathf.Round(worldPos.x - groundPos.x + halfMapSizeX), (int)Mathf.Round(worldPos.z - groundPos.z + halfMapSizeY));
+		return new Vector2Int((int)Mathf.Round((worldPos.x - groundPos.x + halfMapSizeX) / nodeDistance), (int)Mathf.Round((worldPos.z - groundPos.z + halfMapSizeY) / nodeDistance));
 	}
 
 	// Fill unwalkable nodes on the grid map (walls, obstacles etc.)
@@ -104,10 +108,10 @@ public class MapFiller : MonoBehaviour
 	// Place a given obstacle on the grid map
 	private void PlaceWallOnMap(Vector3 min, Vector3 max)
 	{
-		min.x = Mathf.Ceil(min.x);
-		min.z = Mathf.Ceil(min.z);
-		max.x = Mathf.Floor(max.x);
-		max.z = Mathf.Floor(max.z);
+		min.x = Mathf.Ceil(min.x / nodeDistance) * nodeDistance;
+		min.z = Mathf.Ceil(min.z / nodeDistance) * nodeDistance;
+		max.x = Mathf.Floor(max.x / nodeDistance) * nodeDistance;
+		max.z = Mathf.Floor(max.z / nodeDistance) * nodeDistance;
 		Vector2Int minCoords = WorldToMap(min);
 		Vector2Int maxCoords = WorldToMap(max);
 

@@ -188,7 +188,8 @@ public class ThetaStar : MonoBehaviour
 		float lineOfSightLength = lineOfSight.magnitude;
 		if (smoothPath && Physics.RaycastNonAlloc(neighborNodePos, lineOfSight, raycastHitBuffer, lineOfSightLength, wallLayermask) == 0)
 		{
-			float localCost = lineOfSightLength;
+			//float localCost = lineOfSightLength;
+			float localCost = GetDistanceToNeighbor(currentNode.parent.mapPos, neighborNode.mapPos);
 			// check if neighbor node cost should be updated
 			if (currentNode.parent.gCost + localCost < neighborNode.gCost)
 			{
@@ -213,6 +214,7 @@ public class ThetaStar : MonoBehaviour
 	// Get distance to neighbor with this method to lessen the amount of vector magnitude calculations
 	private float GetDistanceToNeighbor(Vector2Int centerCoords, Vector2Int neighborCoords)
 	{
+		return (centerCoords - neighborCoords).magnitude;
 		if (centerCoords.x == neighborCoords.x || centerCoords.y == neighborCoords.y)
 		{
 			return 1f;

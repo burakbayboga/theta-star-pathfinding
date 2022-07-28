@@ -21,7 +21,7 @@ public class PathfindTest : MonoBehaviour
 		pathPointPrefab = Resources.Load("Path Point") as GameObject;
 		pathLinePrefab = Resources.Load("Path Line") as GameObject;
 
-		GetPath();
+		//GetPath();
 	}
 
 	private void Update()
